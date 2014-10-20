@@ -1,0 +1,43 @@
+#!/bin/sh
+
+#  backuprestore.sh
+#  
+#
+#  Created by Dayton Hasty on 10/19/14.
+#
+
+
+clear
+cd
+mkdir BackupRestore > /dev/null
+read -p "What would you like to do? [Backup or Restore]: " whatuwant
+if [[ $whatuwant = Backup ]]; then
+    clear
+    echo "Creating Directory..."
+    cd
+    cd BackupRestore
+    mkdir "`idevicename`" > /dev/null
+    sleep 2
+    idevicebackup2 backup --full "`idevicename`"
+    clear
+    echo "Finished Backing up. Backup directory is ~/BackupRestore/"`idevicename`"/`idevice_id -l`."
+    sleep 2
+    exit
+else
+    clear
+    read -p "Press [Enter] once you have disabled Find My iPhone."
+    echo "Locating Backup..."
+    cd
+    cd BackupRestore
+    sleep 3
+    echo "Initializing Restore from latest backup..."
+    sleep 2
+    idevicebackup2 restore --system --reboot --settings --remove "`idevicename`"
+    clear
+    echo "Rebooting..."
+    sleep 1
+    clear
+    echo "Restore Complete. Please keep the device plugged into the computer until two reboots are complete."
+    sleep 2
+    exit
+fi
